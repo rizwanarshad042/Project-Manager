@@ -1,0 +1,251 @@
+/* Theme variables for dark and light mode */
+:root[data-theme='dark'] {
+  --background-color: #111;
+  --text-color: #fff;
+}
+
+:root[data-theme='light'] {
+  --background-color: #fff;
+  --text-color: #111;
+}
+
+body {
+  background: var(--background-color);
+  color: var(--text-color);
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.login-box, .signup-box, .profile-box, .settings-box, .terms-box, .home-box {
+  width: 500px;
+  max-width: 90vw;
+  font-family: inherit;
+  font-weight: 400;
+  background: inherit;
+  color: inherit;
+  transition: background 0.3s, color 0.3s;
+}
+
+[data-theme="dark"] .login-box,
+[data-theme="dark"] .signup-box,
+[data-theme="dark"] .profile-box,
+[data-theme="dark"] .settings-box,
+[data-theme="dark"] .terms-box,
+[data-theme="dark"] .home-box {
+  background: #23272b !important;
+  color: #fff !important;
+}
+[data-theme="light"] .login-box,
+[data-theme="light"] .signup-box,
+[data-theme="light"] .profile-box,
+[data-theme="light"] .settings-box,
+[data-theme="light"] .terms-box,
+[data-theme="light"] .home-box {
+  background: #fff !important;
+  color: #213547 !important;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  color: #fff;
+  background-color: #181818;
+}
+[data-theme="light"] {
+  color-scheme: light;
+  color: #213547;
+  background-color: #fff;
+}
+
+html, body, #root {
+  transition: background 0.3s, color 0.3s;
+}
+html, body {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/* Bootstrap overrides for dark mode */
+[data-theme="dark"] .bg-light {
+  background-color: #23272b !important;
+}
+[data-theme="dark"] .bg-white {
+  background-color: #222 !important;
+}
+[data-theme="dark"] .card {
+  background-color: #23272b !important;
+  color: #fff;
+  border-color: #333 !important;
+}
+[data-theme="dark"] .shadow,
+[data-theme="dark"] .shadow-lg,
+[data-theme="dark"] .shadow-sm {
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.4) !important;
+}
+[data-theme="dark"] .border {
+  border-color: #444 !important;
+}
+[data-theme="dark"] .rounded {
+  background-color: #23272b !important;
+}
+[data-theme="dark"] .text-muted {
+  color: #b0b0b0 !important;
+}
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+  background-color: #23272b !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+  background-color: #23272b !important;
+  color: #fff !important;
+  border-color: #888 !important;
+}
+[data-theme="dark"] .btn-primary {
+  background-color: #375a7f !important;
+  border-color: #375a7f !important;
+}
+[data-theme="dark"] .btn-outline-primary {
+  color: #61dafb !important;
+  border-color: #61dafb !important;
+}
+[data-theme="dark"] .btn-outline-primary:hover {
+  background-color: #61dafb !important;
+  color: #181818 !important;
+}
+[data-theme="dark"] .btn-outline-secondary {
+  color: #ffd700 !important;
+  border-color: #ffd700 !important;
+}
+[data-theme="dark"] .btn-outline-secondary:hover {
+  background-color: #ffd700 !important;
+  color: #181818 !important;
+}
+[data-theme="dark"] .list-group-item {
+  background-color: #23272b !important;
+  color: #fff !important;
+  border-color: #333 !important;
+}
+[data-theme="dark"] .alert-danger {
+  background-color: #4b1e1e !important;
+  color: #fff !important;
+  border-color: #a94442 !important;
+}
+[data-theme="dark"] .spinner-border {
+  border-top-color: #ffd700 !important;
+  border-right-color: #ffd700 !important;
+}
+[data-theme="dark"] .text-primary {
+  color: #61dafb !important;
+}
+[data-theme="dark"] .bg-primary {
+  background-color: #375a7f !important;
+}
+[data-theme="dark"] .bg-secondary {
+  background-color: #444 !important;
+}
+[data-theme="dark"] .border-danger {
+  border-color: #ff7675 !important;
+}
+[data-theme="dark"] .text-danger {
+  color: #ff7675 !important;
+}
+[data-theme="dark"] .btn-danger {
+  background-color: #ff7675 !important;
+  border-color: #ff7675 !important;
+}
+[data-theme="dark"] .btn-outline-danger {
+  color: #ff7675 !important;
+  border-color: #ff7675 !important;
+}
+[data-theme="dark"] .btn-outline-danger:hover {
+  background-color: #ff7675 !important;
+  color: #181818 !important;
+}
+[data-theme="dark"] .invalid-feedback {
+  color: #ff7675 !important;
+}
+[data-theme="dark"] .bg-success {
+  background-color: #198754 !important;
+}
+[data-theme="dark"] .fw-bold, [data-theme="dark"] .fw-medium {
+  color: #fff !important;
+}
+[data-theme="dark"] .captcha-display {
+  background: linear-gradient(135deg, #23272b 0%, #375a7f 100%) !important;
+  color: #ffd700 !important;
+}
+[data-theme="dark"] .border-top {
+  border-top-color: #333 !important;
+}
+[data-theme="dark"] .border-bottom {
+  border-bottom-color: #333 !important;
+}
+[data-theme="dark"] .rounded-3 {
+  background-color: #23272b !important;
+}
+[data-theme="dark"] .navbar {
+  background-color: #181818 !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .container, [data-theme="dark"] .container-fluid {
+  background-color: transparent !important;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
