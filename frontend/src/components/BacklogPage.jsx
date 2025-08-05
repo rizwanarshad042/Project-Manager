@@ -829,7 +829,7 @@ function BacklogPage() {
             <input type="text" className="form-control" placeholder="Description" value={newBacklog.description} onChange={e => setNewBacklog(nb => ({ ...nb, description: e.target.value }))} />
           </div>
           <div className="col-md-2">
-            <button className="btn btn-success w-100" onClick={handleAddBacklog} style={{ fontSize: '0.8rem', padding: '0.5rem', height: '48px' }}>Add</button>
+            <button className="btn btn-success w-100" onClick={handleAddBacklog} style={{ fontSize: '1rem', padding: '0.5rem', height: '48px' }}>Add</button>
           </div>
         </div>
       </Modal.Body>

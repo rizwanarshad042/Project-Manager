@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import AvailableTeamMembers from './AvailableTeamMembers';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './theme.css';
@@ -24,6 +21,16 @@ function CreateUser() {
   const theme = useSelector((state) => state.theme.mode);
 
   const navigate = useNavigate();
+
+  // Auto-hide message after 2 seconds
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage('');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,14 +70,12 @@ function CreateUser() {
       const data = await res.json();
       
       if (res.ok) {
-        toast.success(`${role === 'team_lead' ? 'Team Lead' : 'Developer'} created successfully!`);
-        setTimeout(() => {
-          setName('');
-          setEmail('');
-          setPassword('');
-          setRole('team_lead');
-          setSpecialization('');
-        }, 1000);
+        setMessage(`${role === 'team_lead' ? 'Team Lead' : 'Developer'} created successfully!`);
+        setName('');
+        setEmail('');
+        setPassword('');
+        setRole('team_lead');
+        setSpecialization('');
       } else {
         setMessage(data.message || 'Failed to create user.');
       }
@@ -193,7 +198,13 @@ function CreateUser() {
             <div className="col-12">
               {message && (
                 <div className="mb-2">
-                  <span style={{color: message.includes('successfully') ? 'green' : 'red', fontSize: '0.875rem'}}>
+                  <span style={{
+                    color: message.includes('successfully') ? 
+                      (theme === 'dark' ? '#68d391' : '#38a169') : 
+                      (theme === 'dark' ? '#fc8181' : '#e53e3e'),
+                    fontSize: '0.875rem',
+                    fontWeight: 500
+                  }}>
                     {message}
                   </span>
                 </div>

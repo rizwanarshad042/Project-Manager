@@ -563,27 +563,55 @@ app.post('/api/users', verifyToken, async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   try {
+    // Log the login attempt
+    console.log('Login attempt for email:', email);
+
+    if (!email || !password) {
+      console.log('Missing email or password');
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    
     if (result.rows.length === 0) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      console.log('User not found:', email);
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
+
     const user = result.rows[0];
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    console.log('User found:', { id: user.user_id, role: user.role });
+
+    try {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      console.log('Password match result:', passwordMatch);
+
+      if (!passwordMatch) {
+        console.log('Password mismatch for user:', email);
+        return res.status(401).json({ message: 'Invalid email or password' });
+      }
+
+      const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '1h' });
+      
+      const response = {
+        id: user.user_id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        specialization: user.specialization,
+        created_at: user.created_at,
+        token
+      };
+
+      console.log('Login successful for user:', email);
+      res.json(response);
+      
+    } catch (bcryptError) {
+      console.error('Bcrypt comparison error:', bcryptError);
+      res.status(500).json({ message: 'Authentication error' });
     }
-    const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '1h' });
-    res.json({
-      id: user.user_id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      specialization: user.specialization,
-      created_at: user.created_at,
-      token
-    });
   } catch (err) {
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Internal server error', error: err.message });
   }
 });
 
@@ -718,7 +746,7 @@ app.get('/api/projects', verifyToken, async (req, res) => {
 
 app.put('/api/users/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
-  const { name, email } = req.body;
+  const { name, email, password } = req.body;
   try {
     const user = await getUserById(req.userId);
     if (!user || user.role !== 'admin') {
@@ -728,7 +756,23 @@ app.put('/api/users/:id', verifyToken, async (req, res) => {
     if (!target || target.role !== 'project_manager') {
       return res.status(404).json({ message: 'Project manager not found.' });
     }
-    await pool.query('UPDATE users SET name = $1, email = $2 WHERE user_id = $3', [name, email, id]);
+
+    // Build update query dynamically based on whether password is provided
+    let query = 'UPDATE users SET name = $1, email = $2';
+    let values = [name, email];
+
+    // If password is provided, hash it and add to update
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      query += ', password = $' + (values.length + 1);
+      values.push(hashedPassword);
+    }
+
+    // Add WHERE clause
+    query += ' WHERE user_id = $' + (values.length + 1);
+    values.push(id);
+
+    await pool.query(query, values);
     res.json({ message: 'Project manager updated.' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to update project manager.' });
@@ -1315,14 +1359,14 @@ app.get('/api/projects/:projectId/sprints', verifyToken, async (req, res) => {
     } else if (user.role === 'team_lead') {
       projectQuery = `SELECT p.* FROM projects p
         JOIN project_team_leads ptl ON p.project_id = ptl.project_id
-        WHERE ptl.team_lead_id = $1 AND p.project_id = $2`;
-      params = [user.user_id, projectId];
+        WHERE ptl.team_lead_id = $1 AND p.status != 'completed' AND p.status != 'deleted'`;
+      params = [user.user_id];
     } else if (user.role === 'developer') {
       projectQuery = `SELECT p.* FROM projects p
         JOIN project_team_leads ptl ON p.project_id = ptl.project_id
         JOIN team_lead_developers tld ON ptl.team_lead_id = tld.team_lead_id
-        WHERE tld.developer_id = $1 AND p.project_id = $2`;
-      params = [user.user_id, projectId];
+        WHERE tld.developer_id = $1 AND p.status != 'completed' AND p.status != 'deleted'`;
+      params = [user.user_id];
     } else {
       return res.status(403).json({ message: 'Invalid role' });
     }
@@ -2233,7 +2277,7 @@ app.get('/api/available-team-members', verifyToken, requireRole(['project_manage
       FROM users u
       WHERE u.role = 'team_lead'
       AND u.user_id NOT IN (
-        SELECT ptl.team_lead_id 
+        SELECT DISTINCT ptl.team_lead_id 
         FROM project_team_leads ptl
         JOIN projects p ON ptl.project_id = p.project_id
         WHERE p.status != 'completed' ${projectFilter}
@@ -2247,7 +2291,7 @@ app.get('/api/available-team-members', verifyToken, requireRole(['project_manage
       FROM users u
       WHERE u.role = 'developer'
       AND u.user_id NOT IN (
-        SELECT tld.developer_id
+        SELECT DISTINCT tld.developer_id
         FROM team_lead_developers tld
         JOIN project_team_leads ptl ON tld.team_lead_id = ptl.team_lead_id
         JOIN projects p ON ptl.project_id = p.project_id
