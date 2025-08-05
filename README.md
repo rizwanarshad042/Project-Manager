@@ -146,4 +146,3 @@ This project is licensed under the ISC License.
 
 - React team for the amazing framework
 - Bootstrap team for the UI components
-- All contributors who participate in this project
