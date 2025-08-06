@@ -110,39 +110,9 @@ Frontend:
 cd frontend
 npm run dev
 ```
+## 🎥 Project Demo
 
-## Project Structure
+Watch the project demo here:
 
-```
-TaskMaster/
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── features/
-│   │   ├── utils/
-│   │   └── App.jsx
-│   └── package.json
-├── backend/
-│   ├── routes/
-│   ├── controllers/
-│   ├── models/
-│   └── server.js
-└── README.md
-```
+[📽️ TaskMaster Demo Video](https://github.com/rizwanarshad042/TaskMaster/raw/main/TaskMaster.mp4)
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the ISC License.
-
-## Acknowledgments
-
-- React team for the amazing framework
-- Bootstrap team for the UI components
